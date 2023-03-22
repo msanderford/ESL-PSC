@@ -1,2 +1,0 @@
---esl_main_dir .
---esl_inputs_outputs_dir .

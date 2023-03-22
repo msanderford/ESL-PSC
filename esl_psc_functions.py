@@ -24,6 +24,17 @@ def parse_args_with_config(parser):
     else: 
         print("did not find an esl_psc_config.txt in this directory")
         args = parser.parse_args()
+    # the following path was an arg in earlier versions but will be static here
+    args.esl_main_dir = os.path.dirname(os.path.abspath(__file__))
+    # set this path if necessary
+    if not args.esl_inputs_outputs_dir:
+        args.esl_inputs_outputs_dir = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            "preprocessed_data_and_outputs/")
+    if ((args.make_sps_plot or args.make_sps_kde_plot) and not
+        args.species_pheno_path):
+            raise ValueError("Error: A species phenotype file is required to "
+                             "make species plots or KDE plots.")
     return args
 
 def is_fasta(file_name):
@@ -326,7 +337,8 @@ def run_preprocess(esl_dir_path, response_matrix_file_path, path_file_path,
                         "the new preprocess folder already exists at "
                         + esl_inputs_folder_name + " where the preprocess is "
                         "supposed to be moved to. So that won't work")
-    #construct command to run ESL preprocess                           
+    #construct command to run ESL preprocess
+    print(os.getcwd())
     preprocess_command_list = [os.path.join(esl_dir_path,
                                'bin/preprocess'),
                                response_matrix_file_path,
@@ -356,8 +368,7 @@ def rmse_range_pred_plots(pred_csv_path, title, pheno_names = None,
     # code borrowed largely from Louise, with some tweaks
     start_time = time.time()
     print("making sps density plot figure...")
-##    rmse_cutoffs = [.05, .1, .25, .5, .75, 1] # can use more RMSE cutoffs
-    rmse_cutoffs = [.05, 1]
+    rmse_cutoffs = [.05, .1]
     if plot_type == 'violin':
         fig, axes = plt.subplots(ncols = len(rmse_cutoffs), figsize=(8, 7),
                              constrained_layout=True)
@@ -370,7 +381,7 @@ def rmse_range_pred_plots(pred_csv_path, title, pheno_names = None,
                                              'input_RMSE':float,
                                              'true_phenotype':str})
     df = df[['species', 'SPS', 'num_genes', 'input_RMSE', 'true_phenotype']]
-    # save fig in same folder wiht the predictions CSV file
+    # save fig in same folder with the predictions CSV file
     fig_path = os.path.join(os.path.split(pred_csv_path)[0],
                             title + '_pred_sps_plot.svg')
     if not pheno_names: # set phenotype names
@@ -380,7 +391,7 @@ def rmse_range_pred_plots(pred_csv_path, title, pheno_names = None,
         
     for index, rmse_cutoff in enumerate(rmse_cutoffs):
         # create each plot
-        print("making plot with RMSE cutoff: " + str(rmse_cutoff))
+        print("making plot with MFS cutoff: " + str(rmse_cutoff))
         if plot_type == 'kde':    
             sps_density.create_sps_plot(df = df,
                                     RMSE_rank = rmse_cutoff,

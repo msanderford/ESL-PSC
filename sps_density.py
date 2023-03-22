@@ -62,7 +62,7 @@ def create_sps_plot(csv_file_path=None,
     sns.kdeplot(data_wide['1'], color=pos_pheno_color, bw_method=bw_method, ax=axes, label=pos_pheno_name)
     
     # labels axes and adds title
-    title = title + '\nlowest ' + "{0:.0%}".format(RMSE_rank) + ' of RMSE models combined'
+    title = title + '\nlowest ' + "{0:.0%}".format(RMSE_rank) + ' of MFS models combined'
     
     #adds caption with percent accuracy
     if percent_accuracy:
@@ -149,7 +149,7 @@ def create_sps_plot_violin(csv_file_path=None,
                    linewidth = 0)
 
     # set the plot title and axis labels
-    title_cutoff = '\n'+ '\n'.join(wrap(title, width = 33)) + '\nlowest ' + "{0:.0%}".format(RMSE_rank) + ' of RMSE models combined'
+    title_cutoff = '\n'+ '\n'.join(wrap(title, width = 33)) + '\nlowest ' + "{0:.0%}".format(RMSE_rank) + ' of MFS models combined'
     axes.set_ylabel('Sequence Prediction Score')
     axes.set_title(title_cutoff, wrap=True)
 

@@ -12,24 +12,23 @@ def get_esl_args(parser = None):
     object.'''
     # Create the parser if an existing one hasn't been passed in
     if not parser:
-        parser = argparse.ArgumentParser(description = 'esl-psc integrator.\n'
-                                         'An * indicates required arguments.')
+        parser = argparse.ArgumentParser(description = 'ESL-PSC integrator')
     # ************Add arguments************
 
     ######### Directories and Paths #########
     group = parser.add_argument_group('Directories and Paths')
-    help_txt = '''*full path to the main directory that contains the
-    subdirectory with sg_lasso executable files i.e.
-    mlpack-3.2.2/build/bin/mlpack_sg_lasso
-    '''
-    group.add_argument('--esl_main_dir', help = help_txt,
-                           type = str, required = True)
-    help_txt = '''* The full path to the folder where the preprocessed input
+##    help_txt = '''*full path to the main directory that contains the
+##    subdirectory with sg_lasso executable files i.e.
+##    mlpack-3.2.2/build/bin/mlpack_sg_lasso
+##    '''
+##    group.add_argument('--esl_main_dir', help = help_txt,
+##                           type = str, required = True)
+    help_txt = '''The full path to the folder where the preprocessed input
     folder will be. this same folder will be where the output feature weights
-    files are put
+    files are put. 
     '''
     group.add_argument('--esl_inputs_outputs_dir', help = help_txt,
-                           type = str, required = True)
+                           type = str)
     help_txt = '''The full path to the species phenotypes file which has the 
     species name then a comma and then a 1 or -1 for the phenotype class.
     Any species that is not in the phenotype file will not be included in the
@@ -211,7 +210,7 @@ def replace_group_penalties(esl_inputs_outputs_dir, gene_objects_dict,
     with open(group_indices_file, 'r') as file:
         group_indices_lines = file.readlines() # get existing lines
     # now just replace the old penalties
-    group_indices_lines[2] = '\t'.join([str(penalty)
+    group_indices_lines[2] = ','.join([str(penalty)
                                         for penalty in new_penalties]) 
     with open(group_indices_file, 'w') as file:
         file.write(''.join(group_indices_lines)) #overwrite new penalties

@@ -269,9 +269,21 @@ if __name__ == '__main__':
         raise argparse.ArgumentTypeError('must include a species groups file '
                                          'or a response_dir with matrices')
 
-    # if an (original) alignments_dir is not given use the prediction alignments
-    if not args.alignments_dir:
+    if args.alignments_dir and args.prediction_alignments_dir:
+        # Both arguments have been provided, no action is required
+        pass
+    elif args.alignments_dir:
+        # Only alignments_dir has been provided, assign
+        # prediction_alignments_dir to the same value
+        args.prediction_alignments_dir = args.alignments_dir
+    elif args.prediction_alignments_dir:
+        # Only prediction_alignments_dir has been provided, assign
+        # alignments_dir to the same value
         args.alignments_dir = args.prediction_alignments_dir
+    else:
+        # Neither argument has been provided, raise an error
+        raise ValueError("At least one of --alignments-dir or "
+                         "--prediction-alignments-dir must be provided.")
 
     # if use_uncanceled_alignments option is given, set canceled alignments dir
     if args.use_uncanceled_alignments:

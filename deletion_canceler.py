@@ -7,7 +7,7 @@
 # there is also an option to impute genes from related species when missing
 
 import os, sys, argparse, itertools, time, datetime
-import esl_ct_functions as ecf 
+import esl_psc_functions as ecf 
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
